@@ -1,5 +1,8 @@
 package Home;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,6 +15,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 
 public class Connection_DB {
 
@@ -186,7 +199,7 @@ public class Connection_DB {
 
 	}
 
-	// xoa nhan vien
+	// xoa nhan vien + có thể áp dụng cho cập nhật
 	public void deleteCandidate(int idnhanvien) {
 		try {
 			stmt = getConnect().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -197,13 +210,30 @@ public class Connection_DB {
 					System.out.println("Deleted candidate have birth date:" + idnhanvien);
 				}
 			}
-				rs.close();
-				stmt.close();
-				getConnect().close();
+			rs.close();
+			stmt.close();
+			getConnect().close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
+	// Xuat file
+	public void readFile() throws IOException{
+		InputStream in = new FileInputStream("candidate01.txt");
+        Reader reader = new InputStreamReader(in, "UTF-8");
+        BufferedReader br = new BufferedReader(reader);
+ 
+        String s = null;
+        int i = 0;
+        // Đọc từng dòng dữ liệu
+        // Khi đọc 1 dòng trả về null nghĩa là kết thúc luồng.
+        while ((s = br.readLine()) != null) {
+            i++;
+            System.out.println(i + " : " + s);
+        }
+        br.close();
+	}
+	
 }
