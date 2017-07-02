@@ -1,5 +1,7 @@
 package Home;
 
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,7 +14,7 @@ public class Main {
 		Intern_candidate in = new Intern_candidate();
 		Connection_DB db = new Connection_DB();
 		while (true) {
-			try {//chon
+			try {// chon
 				System.out.println("\n==============");
 				System.out.println("MAIN CANDIATE");
 				System.out.println("Please choose!");
@@ -22,8 +24,8 @@ public class Main {
 				System.out.println("4. Delete Candiate");
 				System.out.println("5. Sort Candiate");
 				System.out.println("6. Find Candiate");
-				System.out.println("7. Enter from file");
-				System.out.println("8. Export to file\n");
+				System.out.println("7. Export to file");
+				System.out.println("8. Read from file\n");
 				int choose = Integer.parseInt(sc.nextLine());
 
 				switch (choose) {
@@ -129,8 +131,9 @@ public class Main {
 				// Find candidate
 				case 6:
 					break;
-					
+
 				case 7:
+					db.writeFile();
 					break;
 				case 8:
 					db.readFile();

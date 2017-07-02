@@ -20,6 +20,8 @@ import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -220,20 +222,134 @@ public class Connection_DB {
 	}
 
 	// Xuat file
-	public void readFile() throws IOException{
-		InputStream in = new FileInputStream("candidate01.txt");
-        Reader reader = new InputStreamReader(in, "UTF-8");
-        BufferedReader br = new BufferedReader(reader);
- 
-        String s = null;
-        int i = 0;
-        // Đọc từng dòng dữ liệu
-        // Khi đọc 1 dòng trả về null nghĩa là kết thúc luồng.
-        while ((s = br.readLine()) != null) {
-            i++;
-            System.out.println(i + " : " + s);
-        }
-        br.close();
+	public void writeFile() {
+		try {
+			// true : nếu file chưa tồn tại thì tạo file nếu đã tồn tại thì ghi
+			// nối tiếp vào file
+			// false: nếu file chưa tồn tại thì tạo file nếu đã tồn tại thì ghi
+			// đè lên file cũ
+			FileOutputStream fos = new FileOutputStream("cadidate01.txt", false);
+
+			PrintWriter pw = new PrintWriter(fos);
+
+			Connection conn = getConnect();
+			Statement stm = conn.createStatement();
+			String sqlconn = "SELECT * FROM Candidate";
+			ResultSet rs = stm.executeQuery(sqlconn);
+
+			while (rs.next()) {
+				String firstName = rs.getString(1);
+				pw.println(firstName);
+				String lastName = rs.getString(2);
+				pw.println(lastName);
+				int birthDate = rs.getInt(3);
+				pw.println(birthDate);
+				String address = rs.getString(4);
+				pw.println(address);
+				int phone = rs.getInt(5);
+				pw.println(phone);
+				String email = rs.getString(6);
+				pw.println(email);
+				int candidate_type = rs.getInt(7);
+				pw.println(candidate_type);
+				int expInYear = rs.getInt(8);
+				pw.println(expInYear);
+				String proSkill = rs.getString(9);
+				pw.println(proSkill);
+				String graduation_Date = rs.getString(10);
+				pw.println(graduation_Date);
+				String graduation_Rank = rs.getString(11);
+				pw.println(graduation_Rank);
+				String education = rs.getString(12);
+				pw.println(education);
+				String majors = rs.getString(13);
+				pw.println(majors);
+				int semester = rs.getInt(14);
+				pw.println(semester);
+				String university_Name = rs.getString(15);
+				pw.println(university_Name);
+				pw.println("--");
+			}
+			pw.close();
+			System.out.println("Writer succesfuly!");
+		} catch (Exception e) {
+			System.err.println("Have error!");
+		}
+
 	}
-	
+
+	// Doc file
+	public void readFile() {
+		try {
+			InputStream in = new FileInputStream("cadidate01.txt");
+			Reader reader = new InputStreamReader(in, "UTF-8");
+			BufferedReader br = new BufferedReader(reader);
+			String line = null;
+			while ((line = br.readLine()) != null) {
+
+				// Make sure the line is not null, not empty, and contains 3
+				// comma char
+				if (line != null && !line.equals("")) {
+					String tmp[] = line.split(",");
+					String firstName = tmp[0];
+					String lastName = tmp[1];
+					String birthDate = tmp[2];
+					String address = tmp[3];
+					
+					String phone = tmp[4];
+							
+					
+					String email = tmp[5];
+					
+					String candidate_type = tmp[6];
+									
+					String expInYear = tmp[7];
+
+					String proSkill = tmp[8];
+					String graduation_date = tmp[9];
+					String graduation_rank = tmp[10];
+					String education = tmp[11];
+					String majors = tmp[12];
+					
+					String semester = tmp[13];
+
+					
+					String university_name = tmp[14];
+
+					// do the sql query
+					String sql = "insert into Candidate values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+					try {
+						pstmt = getConnect().prepareStatement(sql);
+						pstmt.setString(1, firstName);
+						pstmt.setString(2, lastName);
+						pstmt.setString(3, birthDate);
+						pstmt.setString(4, address);
+						pstmt.setString(5, phone);
+						pstmt.setString(6, email);
+						pstmt.setString(7, candidate_type);
+						pstmt.setString(8, expInYear);
+						pstmt.setString(9, proSkill);
+						pstmt.setString(10, graduation_date);
+						pstmt.setString(11, graduation_rank);
+						pstmt.setString(12, education);
+						pstmt.setString(13, majors);
+						pstmt.setString(14, semester);
+						pstmt.setString(15, university_name);
+
+						pstmt.executeUpdate();
+						System.out.println("Add candidate DB sucessfully!");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				} else {
+					// manage where the line doesn't fit the pattern
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }
